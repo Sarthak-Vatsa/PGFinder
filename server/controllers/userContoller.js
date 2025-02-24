@@ -90,7 +90,7 @@ const bookPG=async(req,res)=>{
 
     user.bookedPGs.push({ pgId, status: "pending" })
     // pg.request = user._id;
-    pg.availability=false;
+    // pg.availability=false;
     await pg.save()
     await user.save()
 
@@ -101,42 +101,42 @@ const bookPG=async(req,res)=>{
     
 }
 
-// const handleBookingRequest=async(req,res)=>{
-//     const {tenantId,pgId,action}=req.body
-//     const ownerId=req.user.userId
+const handleBookingRequest=async(req,res)=>{
+    const {tenantId,pgId,action}=req.body
+    const ownerId=req.user.userId
     
-//     const pg=await PG.findOne({_id:pgId})
-//     if(!pg){
-//         throw new CustomError.NotFoundError(`the pg with id:${pgId} does not exist`)
-//     }
-//     if(pg.owner.toString()!==ownerId){
-//         throw new CustomError.UnautorizedError(`This PG does not belong to you`)
-//     }
-//     const tenant=await User.findOne({_id:tenantId})
-//     if(!tenant){
-//         throw new CustomError.NotFoundError(`The tenant with given id:${tenantId} does not exists`)
-//     }
+    const pg=await PG.findOne({_id:pgId})
+    if(!pg){
+        throw new CustomError.NotFoundError(`the pg with id:${pgId} does not exist`)
+    }
+    if(pg.owner.toString()!==ownerId){
+        throw new CustomError.UnautorizedError(`This PG does not belong to you`)
+    }
+    const tenant=await User.findOne({_id:tenantId})
+    if(!tenant){
+        throw new CustomError.NotFoundError(`The tenant with given id:${tenantId} does not exists`)
+    }
 
-//     // Find the booking request
-//     const booking = tenant.bookedPGs.find(booking => booking.pgId.toString() === pgId);
-//     if (!booking) {
-//         throw new CustomError.NotFoundError("Booking request not found");
-//     }
+    // Find the booking request
+    const booking = tenant.bookedPGs.find(booking => booking.pgId.toString() === pgId);
+    if (!booking) {
+        throw new CustomError.NotFoundError("Booking request not found");
+    }
 
-//     if(action==='approved'){
-//         booking.status='approved'
-//         pg.availability=false;
-//     }else if(action==='rejected'){
-//         booking.status='rejected'
-//         pg.availability=true
-//         tenant.bookedPGs = tenant.bookedPGs.filter(booking => booking.pgId.toString() !== pgId);
-//     }else{
-//         throw new CustomError.BadRequestError("Invalid action. Use 'approved' or 'rejected'")
-//     }
-//     await tenant.save()
-//     await pg.save()
-//     res.status(StatusCodes.OK).json({ message: `Booking request ${action} successfully` });
-// }
+    if(action==='approved'){
+        booking.status='approved'
+        pg.availability=false;
+    }else if(action==='rejected'){
+        booking.status='rejected'
+        pg.availability=true
+        tenant.bookedPGs = tenant.bookedPGs.filter(booking => booking.pgId.toString() !== pgId);
+    }else{
+        throw new CustomError.BadRequestError("Invalid action. Use 'approved' or 'rejected'")
+    }
+    await tenant.save()
+    await pg.save()
+    res.status(StatusCodes.OK).json({ message: `Booking request ${action} successfully` });
+}
 
 const deleteUser=async(req,res)=>{
     const {userId}=req.body
@@ -173,6 +173,6 @@ module.exports={
     updatePassword,
     bookPG,
     deleteUser,
-    // handleBookingRequest
+    handleBookingRequest
 }
 

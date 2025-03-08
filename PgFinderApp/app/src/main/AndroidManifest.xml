@@ -12,6 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PgFinderApp"
         tools:targetApi="31">
+
+        <activity android:name=".Activities.RegisterActivity" />
+        <activity android:name=".Activities.SignInActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

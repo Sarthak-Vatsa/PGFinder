@@ -15,6 +15,7 @@
 
         <activity android:name=".Activities.RegisterActivity" />
         <activity android:name=".Activities.SignInActivity" />
+        <activity android:name=".Activities.DashboardActivity" />
 
         <activity
             android:name=".MainActivity"

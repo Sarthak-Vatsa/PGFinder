@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3daf15f9-262e-466f-87d7-7049d24f8a91" name="Changes" comment="" />
+    <list default="true" id="3daf15f9-262e-466f-87d7-7049d24f8a91" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/DashboardActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/dataclasses/LoginResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PgFinderApp/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/SignInActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/SignInActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Api/ApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Api/ApiService.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

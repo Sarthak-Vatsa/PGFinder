@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3daf15f9-262e-466f-87d7-7049d24f8a91" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/EditProfileActivity.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/dataclasses/PG.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/DashboardActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/DashboardActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Api/ApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Api/ApiService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Api/RetrofitClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Api/RetrofitClient.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/RegisterActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/RegisterActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/SignInActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/SignInActivity.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

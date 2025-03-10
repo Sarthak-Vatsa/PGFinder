@@ -76,6 +76,26 @@ fun RegistrationScreen() {
         }) {
             Text("Submit")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Already have an account? ")
+            Button(
+                onClick = {
+                    // Navigate to SignInActivity
+                    val intent = android.content.Intent(context, SignInActivity::class.java)
+                    context.startActivity(intent)
+                }
+//                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text("Sign in", color = MaterialTheme.colorScheme.onSecondary)
+            }
+        }
     }
 }
 

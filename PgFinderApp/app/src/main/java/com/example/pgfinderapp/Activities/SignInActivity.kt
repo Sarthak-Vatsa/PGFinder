@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,6 +74,8 @@ fun SignInScreen(onLoginClick: (String, String) -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -108,6 +111,26 @@ fun SignInScreen(onLoginClick: (String, String) -> Unit) {
             }
         ) {
             Text("Sign In")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Don't have an account? Create one")
+            Button(
+                onClick = {
+                    // Navigate to SignInActivity
+                    val intent = android.content.Intent(context, RegisterActivity::class.java)
+                    context.startActivity(intent)
+                }
+//                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text("Register", color = MaterialTheme.colorScheme.onSecondary)
+            }
         }
     }
 }

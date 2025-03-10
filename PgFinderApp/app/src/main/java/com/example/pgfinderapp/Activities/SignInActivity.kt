@@ -90,7 +90,7 @@ fun SignInScreen(onLoginClick: (String, String) -> Unit) {
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
 
         OutlinedTextField(
@@ -124,7 +124,7 @@ fun SignInScreen(onLoginClick: (String, String) -> Unit) {
             Button(
                 onClick = {
                     // Navigate to SignInActivity
-                    val intent = android.content.Intent(context, RegisterActivity::class.java)
+                    val intent = Intent(context, RegisterActivity::class.java)
                     context.startActivity(intent)
                 }
 //                contentPadding = PaddingValues(0.dp)

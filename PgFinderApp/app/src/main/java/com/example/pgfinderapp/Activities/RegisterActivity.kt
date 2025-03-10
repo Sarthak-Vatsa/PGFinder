@@ -57,7 +57,8 @@ fun RegistrationScreen() {
 
         OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Name") })
 
-        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
+        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email))
 
         OutlinedTextField(
             value = password, onValueChange = { password = it },

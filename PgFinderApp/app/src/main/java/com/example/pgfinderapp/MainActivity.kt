@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pgfinderapp.Activities.RegisterActivity
 import com.example.pgfinderapp.Activities.SignInActivity
+import com.example.pgfinderapp.Activities.ViewPgActivity
 import com.example.pgfinderapp.ui.theme.PgFinderAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,10 +30,15 @@ class MainActivity : ComponentActivity() {
             PgFinderAppTheme {
                 MainScreen(
                     onSignUpClick = { navigateToRegister() },
-                    onSignInClick = { navigateToSignIn() }
+                    onSignInClick = { navigateToSignIn() },
+                    onViewPgClick = { navigateToViewPg() }
                 )
             }
         }
+    }
+
+    private fun navigateToViewPg() {
+        startActivity(Intent(this, ViewPgActivity::class.java))
     }
 
     private fun navigateToRegister() {
@@ -45,7 +51,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(onSignUpClick: () -> Unit, onSignInClick: () -> Unit) {
+fun MainScreen(onSignUpClick: () -> Unit, onSignInClick: () -> Unit, onViewPgClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,6 +64,11 @@ fun MainScreen(onSignUpClick: () -> Unit, onSignInClick: () -> Unit) {
         Button(onClick =  onSignInClick ) {
             Text("Sign In")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick =  onViewPgClick ) {
+            Text("View Pgs")
+        }
     }
 }
 
@@ -67,7 +78,8 @@ fun MainScreenPreview() {
     PgFinderAppTheme {
         MainScreen(
             onSignUpClick = {},
-            onSignInClick = {}
+            onSignInClick = {},
+            onViewPgClick = {}
         )
     }
 }

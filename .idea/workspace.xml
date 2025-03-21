@@ -5,14 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3daf15f9-262e-466f-87d7-7049d24f8a91" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Activities/ViewPgActivity.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/dataclasses/PgListing.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/res/drawable-mdpi/pg1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/res/drawable-mdpi/pg2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/res/drawable-mdpi/pg3.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/other.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PgFinderApp/.idea/other.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Api/ApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Api/ApiService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Api/RetrofitClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/PgFinderApp/app/src/main/java/com/example/pgfinderapp/Api/RetrofitClient.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

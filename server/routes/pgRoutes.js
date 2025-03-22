@@ -11,7 +11,7 @@ const {
 
 const {authenticateUser,authorizePermissions}=require('../middlewares/authentication')
 
-router.route('/').get(getAllPGs).post(authenticateUser,authorizePermissions('owner'),createPG)
-router.route('/:id').get(getSinglePG).patch(authenticateUser,authorizePermissions('owner'),updatePG).delete(authenticateUser,authorizePermissions('owner'),deletePG)
+router.route('/').get(authenticateUser,getAllPGs).post(authenticateUser,authorizePermissions('owner'),createPG)
+router.route('/:id').get(authenticateUser,getSinglePG).patch(authenticateUser,authorizePermissions('owner'),updatePG).delete(authenticateUser,authorizePermissions('owner'),deletePG)
 
 module.exports=router

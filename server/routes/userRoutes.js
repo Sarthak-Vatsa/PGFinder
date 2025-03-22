@@ -10,7 +10,8 @@ const {
   bookPG,
   deleteUser,
   handleBookingRequest,
-} = require("../controllers/userContoller");
+  getPGs,
+} = require("../controllers/userContoller.js");
 
 const {
   authenticateUser,
@@ -31,7 +32,7 @@ router
   .route("/handleBookingRequest")
   .post(authenticateUser, authorizePermissions("owner"), handleBookingRequest);
 router.route("/updatePassword").patch(authenticateUser, updatePassword);
-
+router.route("/displayPGs").get(authenticateUser, getPGs);
 router.route("/:id").get(authenticateUser, getSingleUser);
 
 module.exports = router;

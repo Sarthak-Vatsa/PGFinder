@@ -170,6 +170,12 @@ const handleBookingRequest = async (req, res) => {
   });
 };
 
+const getPGs = async (req, res) => {
+  const userId = req.user.userId;
+  const user = await User.findOne({ _id: userId });
+  res.status(StatusCodes.OK).json({ bookedPGs: user.bookedPGs });
+};
+
 const deleteUser = async (req, res) => {
   const { userId } = req.body;
   if (!userId) {
@@ -210,4 +216,5 @@ module.exports = {
   bookPG,
   deleteUser,
   handleBookingRequest,
+  getPGs,
 };

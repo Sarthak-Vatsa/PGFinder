@@ -46,7 +46,7 @@ class SignInActivity : ComponentActivity() {
                             Toast.makeText(this@SignInActivity, "Login Successful", Toast.LENGTH_SHORT).show()
                             // Create intent for DashboardActivity instead of MainActivity
                             val intent = Intent(this@SignInActivity, DashboardActivity::class.java).apply {
-                                // Pass the roll number to dashboard
+                                // Pass the email to dashboard
                                 putExtra("Email", loginResponse?.email ?: email)
                             }
                             startActivity(intent)

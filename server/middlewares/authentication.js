@@ -5,6 +5,8 @@ const {isTokenValid}=require('../utils')
 const authenticateUser=async(req,res,next)=>{
     const token=req.signedCookies.token
 
+    console.log(`Token received ${token}`)
+
     if(!token){
         throw new CustomError.UnauthenticatedError('Authentication Invalid')
     }

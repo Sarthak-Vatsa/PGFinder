@@ -33,6 +33,7 @@ const login=async(req,res)=>{
 }
 
 const logout=async(req,res)=>{
+    console.log("Logout Reached")
     // expire the cookie
     res.cookie('token','logout',{
         httpOnly:true,

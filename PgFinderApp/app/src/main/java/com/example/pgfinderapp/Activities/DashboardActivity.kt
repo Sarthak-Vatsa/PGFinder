@@ -4,6 +4,7 @@ import com.example.pgfinderapp.dataclasses.User
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -25,13 +26,21 @@ import com.example.pgfinderapp.ui.theme.PgFinderAppTheme
 import kotlinx.coroutines.launch
 import androidx.compose.material3.Text
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.pgfinderapp.Api.ApiService
+import com.example.pgfinderapp.Api.RetrofitClient
+import com.example.pgfinderapp.dataclasses.LoginResponse
+import com.example.pgfinderapp.dataclasses.LogoutResponse
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class DashboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Get roll number from intent if passed
-        val email = intent.getStringExtra("ROLL_NO") ?: ""
+        val email = intent.getStringExtra("Email") ?: ""
 
         setContent {
             PgFinderAppTheme {
@@ -45,15 +54,40 @@ class DashboardActivity : ComponentActivity() {
     }
 
     private fun logout() {
-        // Clear any stored credentials or tokens
-        // Example: Clear SharedPreferences
-        getSharedPreferences("pg_finder_prefs", MODE_PRIVATE).edit().clear().apply()
+        RetrofitClient.instance.logoutUser().enqueue(object : Callback<LogoutResponse> {
+            override fun onResponse(call: Call<LogoutResponse>, response: Response<LogoutResponse>) {
+                if (response.isSuccessful) {
+                    // Get the message from response
+                    val message = response.body()?.msg ?: "Logged out successfully"
 
-        // Navigate back to login screen
-        val intent = Intent(this, SignInActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
+                    // Display the message from backend
+                    Toast.makeText(this@DashboardActivity, message, Toast.LENGTH_SHORT).show()
+
+                    // Clear local storage
+                    getSharedPreferences("pg_finder_prefs", MODE_PRIVATE).edit().clear().apply()
+
+                    // Navigate to login
+                    val intent = Intent(this@DashboardActivity, SignInActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                } else {
+                    // Try to parse error message if available
+                    try {
+                        val errorBody = response.errorBody()?.string()
+                        val errorMessage = JSONObject(errorBody ?: "").optString("msg", "Logout failed")
+                        Toast.makeText(this@DashboardActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        Toast.makeText(this@DashboardActivity, "Logout failed", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<LogoutResponse>, t: Throwable) {
+                // Handle network failure
+                Toast.makeText(this@DashboardActivity, "Network error during logout: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun navigateToEditProfile() {
@@ -287,7 +321,6 @@ fun StatusChip(status: String) {
 fun DashboardPreview() {
     PgFinderAppTheme {
         DashboardScreen(email = "", onLogout = { /*TODO*/ }) {
-
         }
     }
 }

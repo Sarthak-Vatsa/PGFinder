@@ -92,7 +92,6 @@ fun RegistrationScreen() {
                     val intent = android.content.Intent(context, SignInActivity::class.java)
                     context.startActivity(intent)
                 }
-//                contentPadding = PaddingValues(0.dp)
             ) {
                 Text("Sign in", color = MaterialTheme.colorScheme.onSecondary)
             }

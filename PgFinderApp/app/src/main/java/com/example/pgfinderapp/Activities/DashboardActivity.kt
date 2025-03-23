@@ -1,7 +1,5 @@
 package com.example.pgfinderapp.Activities
 
-import com.example.pgfinderapp.dataclasses.User
-
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -21,15 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pgfinderapp.dataclasses.PG
-import com.example.pgfinderapp.ui.theme.PgFinderAppTheme
-import kotlinx.coroutines.launch
-import androidx.compose.material3.Text
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.pgfinderapp.Api.ApiService
 import com.example.pgfinderapp.Api.RetrofitClient
-import com.example.pgfinderapp.dataclasses.LoginResponse
 import com.example.pgfinderapp.dataclasses.LogoutResponse
+import com.example.pgfinderapp.dataclasses.PG
+import com.example.pgfinderapp.dataclasses.PGBooking
+import com.example.pgfinderapp.ui.theme.PgFinderAppTheme
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,7 +34,7 @@ class DashboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Get roll number from intent if passed
+        // Get email from intent if passed
         val email = intent.getStringExtra("Email") ?: ""
 
         setContent {
@@ -106,15 +101,15 @@ fun DashboardScreen(
 ) {
     val scope = rememberCoroutineScope()
 
-    val bookedPGs = remember { mutableStateOf<List<PG>>(emptyList()) }
+    val bookedPGs = remember { mutableStateOf<List<PGBooking>>(emptyList()) }
     val isLoading = remember { mutableStateOf(true) }
     val errorMessage = remember { mutableStateOf<String?>(null) }
 
     // Fetch booked PGs when the screen is first displayed
     LaunchedEffect(key1 = true) {
         fetchBookedPGs(
-            onSuccess = { pgs ->
-                bookedPGs.value = pgs
+            onSuccess = { pgBookings ->
+                bookedPGs.value = pgBookings
                 isLoading.value = false
             },
             onError = { message ->
@@ -123,8 +118,6 @@ fun DashboardScreen(
             }
         )
     }
-
-
 
     Scaffold(
         topBar = {
@@ -193,10 +186,22 @@ fun DashboardScreen(
                 }
             }
 
+            // Section title
+            Text(
+                text = "My PG Bookings",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+
             when {
                 isLoading.value -> {
                     Box(
-                        modifier = Modifier.fillMaxWidth().height(200.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
@@ -232,8 +237,8 @@ fun DashboardScreen(
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        items(bookedPGs.value) { pg ->
-                            BookedPGItem(pg = pg)
+                        items(bookedPGs.value) { pgBooking ->
+                            BookedPGItem(pgBooking = pgBooking)
                         }
                     }
                 }
@@ -253,14 +258,14 @@ fun DashboardScreen(
 }
 
 private fun fetchBookedPGs(
-    onSuccess: (List<PG>) -> Unit,
+    onSuccess: (List<PGBooking>) -> Unit,
     onError: (String) -> Unit
 ) {
-    RetrofitClient.instance.getBookedPGs().enqueue(object : Callback<List<PG>> {
-        override fun onResponse(call: Call<List<PG>>, response: Response<List<PG>>) {
+    RetrofitClient.instance.getBookedPGs().enqueue(object : Callback<List<PGBooking>> {
+        override fun onResponse(call: Call<List<PGBooking>>, response: Response<List<PGBooking>>) {
             if (response.isSuccessful) {
-                val pgs = response.body() ?: emptyList()
-                onSuccess(pgs)
+                val bookings = response.body() ?: emptyList()
+                onSuccess(bookings)
             } else {
                 try {
                     val errorBody = response.errorBody()?.string()
@@ -272,14 +277,16 @@ private fun fetchBookedPGs(
             }
         }
 
-        override fun onFailure(call: Call<List<PG>>, t: Throwable) {
+        override fun onFailure(call: Call<List<PGBooking>>, t: Throwable) {
             onError("Network error: ${t.message}")
         }
     })
 }
 
 @Composable
-fun BookedPGItem(pg: PG) {
+fun BookedPGItem(pgBooking: PGBooking) {
+    val pg = pgBooking.pgId
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -297,14 +304,14 @@ fun BookedPGItem(pg: PG) {
             )
 
             Text(
-                text = pg.address,
+                text = "${pg.address}, ${pg.city}",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
 
             Text(
-                text = pg.price.toString(),
+                text = "₹${pg.price}/month",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(vertical = 4.dp)
@@ -317,13 +324,20 @@ fun BookedPGItem(pg: PG) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Display availability status
                 StatusChip(availability = pg.availability)
 
-                Button(
-                    onClick = { /* View details */ }
-                ) {
-                    Text("View Details")
-                }
+                // Display booking status
+                BookingStatusChip(status = pgBooking.status)
+            }
+
+            Button(
+                onClick = { /* View details */ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Text("View Details")
             }
         }
     }
@@ -333,9 +347,7 @@ fun BookedPGItem(pg: PG) {
 fun StatusChip(availability: Boolean) {
     val backgroundColor = when (availability) {
         true -> Color(0xFF4CAF50)  // Green
-//        "pending" -> Color(0xFFFFC107)   // Amber
         false -> Color(0xFFF44336)  // Red
-//        else -> Color.Gray
     }
 
     Surface(
@@ -355,11 +367,33 @@ fun StatusChip(availability: Boolean) {
     }
 }
 
+@Composable
+fun BookingStatusChip(status: String) {
+    val backgroundColor = when (status.lowercase()) {
+        "approved" -> Color(0xFF4CAF50)  // Green
+        "pending" -> Color(0xFFFFC107)   // Amber
+        "rejected" -> Color(0xFFF44336)  // Red
+        else -> Color.Gray
+    }
+
+    Surface(
+        color = backgroundColor,
+        shape = MaterialTheme.shapes.small
+    ) {
+        Text(
+            text = status.capitalize(),
+            color = Color.White,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun DashboardPreview() {
     PgFinderAppTheme {
-        DashboardScreen(email = "", onLogout = { /*TODO*/ }) {
-        }
+        DashboardScreen(email = "user@example.com", onLogout = {}, onEditProfile = {})
     }
 }

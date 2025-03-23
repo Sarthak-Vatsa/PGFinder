@@ -3,6 +3,7 @@ package com.example.pgfinderapp.Api
 import com.example.pgfinderapp.dataclasses.LoginResponse
 import com.example.pgfinderapp.dataclasses.LogoutResponse
 import com.example.pgfinderapp.dataclasses.PG
+import com.example.pgfinderapp.dataclasses.PGBooking
 import com.example.pgfinderapp.dataclasses.User
 
 import retrofit2.Call
@@ -21,5 +22,5 @@ interface ApiService {
     fun logoutUser(): Call<LogoutResponse>
 
     @GET("user/displayPGs")
-    fun getBookedPGs(): Call<List<PG>>
+    fun getBookedPGs(): Call<List<PGBooking>>
 }

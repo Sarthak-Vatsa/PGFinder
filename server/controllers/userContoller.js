@@ -170,10 +170,33 @@ const handleBookingRequest = async (req, res) => {
   });
 };
 
+// const getPGs = async (req, res) => {
+//   const userId = req.user.userId;
+//   const user = await User.findOne({ _id: userId });
+//   res.status(StatusCodes.OK).json({ bookedPGs: user.bookedPGs });
+// };
+
 const getPGs = async (req, res) => {
-  const userId = req.user.userId;
-  const user = await User.findOne({ _id: userId });
-  res.status(StatusCodes.OK).json({ bookedPGs: user.bookedPGs });
+  try {
+    const userId = req.user.userId;
+    const user = await User.findOne({ _id: userId }).populate({
+      path: "bookedPGs.pgId",
+      model: "PG", // Explicitly reference the PG model
+      populate: {
+        path: "reviews",
+        model: "Reviews", // Ensure correct model reference
+      },
+    });
+
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).json([]);
+    }
+
+    res.status(StatusCodes.OK).json(user.bookedPGs || []);
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json([]);
+  }
 };
 
 const deleteUser = async (req, res) => {

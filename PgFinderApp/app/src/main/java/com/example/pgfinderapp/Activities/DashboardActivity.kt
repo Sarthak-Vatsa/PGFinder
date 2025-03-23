@@ -106,29 +106,25 @@ fun DashboardScreen(
 ) {
     val scope = rememberCoroutineScope()
 
-    // Sample data - replace with actual data from your API
-    val bookedPGs = remember {
-        mutableStateOf(
-            listOf(
-                PG(
-                    name = "Sunshine PG",
-                    address = "123 Main St, City",
-                    city = "Kurukshetra",
-                    owner = User("Baba", "abc@gmail.com", "", "OWNER"),
-                    price = 8000,
-                    status = "booked"
-                ),
-                PG(
-                    name = "Sunshine PG",
-                    address = "123 Main St, City",
-                    city = "Kurukshetra",
-                    owner = User("Baba", "abc@gmail.com", "", "OWNER"),
-                    price = 8000,
-                    status = "pending"
-                )
-            )
+    val bookedPGs = remember { mutableStateOf<List<PG>>(emptyList()) }
+    val isLoading = remember { mutableStateOf(true) }
+    val errorMessage = remember { mutableStateOf<String?>(null) }
+
+    // Fetch booked PGs when the screen is first displayed
+    LaunchedEffect(key1 = true) {
+        fetchBookedPGs(
+            onSuccess = { pgs ->
+                bookedPGs.value = pgs
+                isLoading.value = false
+            },
+            onError = { message ->
+                errorMessage.value = message
+                isLoading.value = false
+            }
         )
     }
+
+
 
     Scaffold(
         topBar = {
@@ -197,34 +193,48 @@ fun DashboardScreen(
                 }
             }
 
-            // Booked PGs Section
-            Text(
-                text = "Your Booked PGs",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp)
-            )
-
-            if (bookedPGs.value.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "You haven't booked any PGs yet",
-                        color = Color.Gray
-                    )
+            when {
+                isLoading.value -> {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().height(200.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    items(bookedPGs.value) { pg ->
-                        BookedPGItem(pg = pg)
+                errorMessage.value != null -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = errorMessage.value ?: "Error loading PGs",
+                            color = Color.Red
+                        )
+                    }
+                }
+                bookedPGs.value.isEmpty() -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "You haven't booked any PGs yet",
+                            color = Color.Gray
+                        )
+                    }
+                }
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        items(bookedPGs.value) { pg ->
+                            BookedPGItem(pg = pg)
+                        }
                     }
                 }
             }
@@ -240,6 +250,32 @@ fun DashboardScreen(
             }
         }
     }
+}
+
+private fun fetchBookedPGs(
+    onSuccess: (List<PG>) -> Unit,
+    onError: (String) -> Unit
+) {
+    RetrofitClient.instance.getBookedPGs().enqueue(object : Callback<List<PG>> {
+        override fun onResponse(call: Call<List<PG>>, response: Response<List<PG>>) {
+            if (response.isSuccessful) {
+                val pgs = response.body() ?: emptyList()
+                onSuccess(pgs)
+            } else {
+                try {
+                    val errorBody = response.errorBody()?.string()
+                    val errorMessage = JSONObject(errorBody ?: "").optString("msg", "Failed to load PGs")
+                    onError(errorMessage)
+                } catch (e: Exception) {
+                    onError("Failed to load PGs: ${response.code()}")
+                }
+            }
+        }
+
+        override fun onFailure(call: Call<List<PG>>, t: Throwable) {
+            onError("Network error: ${t.message}")
+        }
+    })
 }
 
 @Composable
@@ -281,7 +317,7 @@ fun BookedPGItem(pg: PG) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                StatusChip(status = pg.status)
+                StatusChip(availability = pg.availability)
 
                 Button(
                     onClick = { /* View details */ }
@@ -294,12 +330,12 @@ fun BookedPGItem(pg: PG) {
 }
 
 @Composable
-fun StatusChip(status: String) {
-    val backgroundColor = when (status.lowercase()) {
-        "booked" -> Color(0xFF4CAF50)  // Green
-        "pending" -> Color(0xFFFFC107)   // Amber
-        "rejected" -> Color(0xFFF44336)  // Red
-        else -> Color.Gray
+fun StatusChip(availability: Boolean) {
+    val backgroundColor = when (availability) {
+        true -> Color(0xFF4CAF50)  // Green
+//        "pending" -> Color(0xFFFFC107)   // Amber
+        false -> Color(0xFFF44336)  // Red
+//        else -> Color.Gray
     }
 
     Surface(
@@ -307,7 +343,10 @@ fun StatusChip(status: String) {
         shape = MaterialTheme.shapes.small
     ) {
         Text(
-            text = status.uppercase(),
+            text = when(availability){
+                true -> "Available"
+                false -> "Not Available"
+            },
             color = Color.White,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             fontWeight = FontWeight.Bold,
